@@ -49,7 +49,7 @@ public class Notification
             });
 
             trayIcon = new TrayIcon(
-                ImageIO.read(getClass().getResource("resources/notification_dark.png")),
+                ImageIO.read(getClass().getResource("/notification_dark.png")),
                 "Facebook Notifications",
                 menu
             );
