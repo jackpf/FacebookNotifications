@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
-public class NotificationListener
+public class LocalServer
 {
     public void listen() throws IOException
     {
