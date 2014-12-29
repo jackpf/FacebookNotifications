@@ -13,6 +13,7 @@ import java.awt.event.MouseWheelListener;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
+import javax.swing.border.EmptyBorder;
 
 public class JScrollPopupMenu extends JPopupMenu
 {
@@ -43,6 +44,8 @@ public class JScrollPopupMenu extends JPopupMenu
                 event.consume();
             }
         });
+
+        setBorder(new EmptyBorder(0, 0, 0, 0));
     }
 
     private JScrollBar popupScrollBar;

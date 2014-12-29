@@ -9,6 +9,7 @@ import com.jackpf.facebooknotifications.Helpers.JScrollPopupMenu;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
@@ -29,7 +30,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 public class NotificationManager implements Observer
 {
@@ -52,9 +52,11 @@ public class NotificationManager implements Observer
                 null
             );
 
-            trayIcon.addMouseListener(new MouseAdapter() {
+            trayIcon.addMouseListener(new MouseAdapter()
+            {
                 @Override
-                public void mouseReleased(MouseEvent e) {
+                public void mouseReleased(MouseEvent e)
+                {
                     if (!menu.isShowing()) {
                         menu.show(null, e.getX() - 150, e.getY());
                     } else {
@@ -62,8 +64,6 @@ public class NotificationManager implements Observer
                     }
                 }
             });
-
-            menu.setBorder(new EmptyBorder(0, 0, 0, 0));
 
             addFooter(menu);
 
@@ -148,6 +148,7 @@ public class NotificationManager implements Observer
     private void addFooter(JPopupMenu menu)
     {
         JPanel p = new JPanel();
+        p.setPreferredSize(new Dimension(300, 25));
 
         JInteractiveIcon exit = new JInteractiveIcon(
             getClass().getResource("/exit.png"),

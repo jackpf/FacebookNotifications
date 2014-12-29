@@ -15,7 +15,8 @@ public class JInteractiveMenuItem extends JMenuItem
     {
         super(text, icon);
 
-        addMouseListener(new MouseListener() {
+        addMouseListener(new MouseListener()
+        {
             @Override
             public void mouseClicked(MouseEvent e) { }
 
@@ -28,16 +29,16 @@ public class JInteractiveMenuItem extends JMenuItem
             @Override
             public void mouseEntered(MouseEvent e) {
                 setBackground(hoverColour);
+                setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 setBackground(null);
+                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
         });
 
         setBorder(new EmptyBorder(5, 0, 5, 0));
-
-        setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 }
