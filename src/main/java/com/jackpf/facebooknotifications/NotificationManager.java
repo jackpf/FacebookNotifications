@@ -91,14 +91,14 @@ public class NotificationManager implements Observer
             @Override
             public void actionPerformed(ActionEvent event)
             {
+                notifications.remove(notification);
+                menu.setVisible(false);
+
                 try {
                     Desktop.getDesktop().browse(new URI(notification.link));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                notifications.remove(notification);
-                menu.setVisible(false);
             }
         });
 

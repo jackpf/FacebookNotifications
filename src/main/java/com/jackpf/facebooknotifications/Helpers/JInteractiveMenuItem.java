@@ -1,7 +1,6 @@
 package com.jackpf.facebooknotifications.Helpers;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -29,13 +28,13 @@ public class JInteractiveMenuItem extends JMenuItem
             @Override
             public void mouseEntered(MouseEvent e) {
                 setBackground(hoverColour);
-                setCursor(new Cursor(Cursor.HAND_CURSOR));
+                //setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 setBackground(null);
-                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                //setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
         });
 
