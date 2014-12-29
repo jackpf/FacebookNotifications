@@ -2,7 +2,14 @@ package com.jackpf.facebooknotifications.Facebook;
 
 import com.restfb.Facebook;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.awt.Image;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Notification
 {
@@ -59,4 +66,29 @@ public class Notification
     public int position;
 
     // Object?
+
+    public String getTitle(int len)
+    {
+        if (title.length() > len) {
+            return title.substring(0, len) + "...";
+        } else {
+            return title;
+        }
+    }
+
+    public Date getParsedDate() throws ParseException
+    {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ssZZZZ", Locale.getDefault());
+        return df.parse(updatedTime);
+    }
+
+    public String getPrettyDate()
+    {
+        try {
+            return new PrettyTime().format(getParsedDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -1,63 +1,130 @@
 package com.jackpf.facebooknotifications.Facebook;
 
+import org.apache.commons.io.IOUtils;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
 import java.awt.Desktop;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URI;
-import java.util.Scanner;
+
+import javax.swing.JOptionPane;
 
 public class Authenticator
 {
-    private Desktop desktop = Desktop.getDesktop();
-    private static final String AUTHORISE_URL = "https://graph.facebook.com/oauth/authorize?client_id=%s&redirect_uri=http://www.facebook.com/connect/login_success.html&scope=manage_notifications";
+    private final String ACCESS_TOKEN_FILE = System.getProperty("user.home") + "/.FacebookNotifications/access_token";
     private String apiKey;
     private String apiSecret;
+    private static String accessToken;
 
     public Authenticator(String apiKey, String apiSecret)
     {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
+        reloadAccessToken();
     }
 
-    public String getApiKey()
+    private void reloadAccessToken()
     {
-        return apiKey;
+        File file = new File(ACCESS_TOKEN_FILE);
+        file.getParentFile().mkdirs();
+
+        InputStream in = null;
+
+        try {
+            in = new FileInputStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            accessToken = IOUtils.toString(reader);
+            System.out.println("Reloaded access token");
+        } catch (Exception e) {
+
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+
+            }
+        }
     }
 
-    public String getApiSecret()
+    private void persistAccessToken()
     {
-        return apiSecret;
+        Writer writer = null;
+
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ACCESS_TOKEN_FILE)));
+            writer.write(accessToken);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (Exception e) {
+
+            }
+        }
     }
 
     public String getAccessToken()
     {
-        try {
-            //String uri = String.format(AUTHORISE_URL, apiKey);
-            //desktop.browse(new URI(uri));
+        return getAccessToken(false);
+    }
 
+    public String getAccessToken(boolean forceReload)
+    {
+        if (!forceReload && accessToken != null) {
+            return accessToken;
+        }
+
+        try {
             OAuthService service = new ServiceBuilder()
                 .provider(FacebookApi.class)
                 .apiKey(apiKey)
                 .apiSecret(apiSecret)
-                .callback("http://localhost/oauth_redirect/")
+                .scope("manage_notifications")
+                .callback("http://localhost:8080/oauth_redirect/")
                 .build();
 
-            String authorizationUrl = service.getAuthorizationUrl(null);
+            Desktop.getDesktop().browse(new URI(service.getAuthorizationUrl(null)));
+            String authorisationCode = receiveAuthorisationCode();
 
-            Desktop.getDesktop().browse(new URI(authorizationUrl));
+            if (authorisationCode == null) {
+                System.exit(-1);
+            }
 
-            Scanner in = new Scanner(System.in);
-            System.out.println("Paste the authorization code here");
-            System.out.print(">>");
-            Verifier verifier = new Verifier(in.nextLine());
-String a = service.getAccessToken(null, verifier).getToken();System.err.println(a);
-            return a;
+            Verifier verifier = new Verifier(authorisationCode);
+            accessToken = service.getAccessToken(null, verifier).getToken();
+
+            persistAccessToken();
+
+            return accessToken;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private String receiveAuthorisationCode()
+    {
+        return JOptionPane.showInputDialog(
+            null,
+            "Please grant permissions on Facebook and paste the authorisation code here:",
+            "Authorisation Code",
+            JOptionPane.INFORMATION_MESSAGE
+        );
     }
 }

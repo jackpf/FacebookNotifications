@@ -6,30 +6,29 @@ import com.restfb.Parameter;
 import com.restfb.exception.FacebookOAuthException;
 import com.restfb.types.User;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+
+import java.io.IOException;
 import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 
-public class NotificationClient extends DefaultFacebookClient
+public class NotificationClient extends DefaultFacebookClient implements Observer
 {
     private Notifications notifications;
     private Authenticator authenticator;
 
     public NotificationClient(Notifications notifications, Authenticator authenticator)
     {
-        super("CAAI9MvHB7MwBAOOW1qh4j52ZC3x73PlwfZA3d1m80Ts2FjjLyEM9brEMQU7qYDiBrK4RzwsySkCDPpsVoMPAl9RuYZAD6HdYFF7GXS7GOUmx2NXTaBVUkzNBldkNoaoNWWYWqulTsF0YJXfByWxvkZArnVuJlWEFY0uKHAWYv3iX7kXZC78njovmartlHt1ZAGhx0LNp9ukiekgfbYMPAm");//authenticator.getAccessToken());
+        super(authenticator.getAccessToken());
         this.notifications = notifications;
-    }
+        this.authenticator = authenticator;
 
-    private void addIcon(Notification notification)
-    {
-        User user = fetchObject(notification.from.id, User.class, Parameter.with("fields", "picture"), Parameter.with("type", "large"));
-
-        try {
-            notification.image = ImageIO.read(new URL(user.getPicture().getUrl()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        notifications.addObserver(this);
     }
 
     public void getNotifications()
@@ -44,10 +43,53 @@ public class NotificationClient extends DefaultFacebookClient
                 notification.position = notifications.getData().size() - i;
                 i++;
 
-                this.notifications.add(notification);
+                if (!this.notifications.contains(notification)) {
+                    this.notifications.add(notification);
+                }
             }
         } catch (FacebookOAuthException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
+
+            this.accessToken = authenticator.getAccessToken(true);
+        }
+    }
+
+    private void addIcon(Notification notification)
+    {
+        User user = fetchObject(notification.from.id, User.class, Parameter.with("fields", "picture"), Parameter.with("type", "large"));
+
+        try {
+            notification.image = ImageIO.read(new URL(user.getPicture().getUrl()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Not sure if restfb has a way of marking notifications as read
+     * So for now this just manually sends a post request to mark the notification as read
+     */
+    @Override
+    public void update(Observable observable, Object data)
+    {
+        Notification notification = (Notification) data;
+
+        if (!((Notifications) observable).contains(notification)) {
+            HttpClient client = HttpClientBuilder.create().build();
+
+            HttpPost request = new HttpPost(
+                String.format(
+                    "https://graph.facebook.com/%s?access_token=%s&unread=false",
+                    notification.id,
+                    authenticator.getAccessToken()
+                )
+            );
+
+            try {
+                client.execute(request);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
