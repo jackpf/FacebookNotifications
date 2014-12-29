@@ -6,13 +6,18 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.Window;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 public class JScrollPopupMenu extends JPopupMenu
@@ -46,6 +51,7 @@ public class JScrollPopupMenu extends JPopupMenu
         });
 
         setBorder(new EmptyBorder(5, 0, 0, 0));
+        setLightWeightPopupEnabled(false);
     }
 
     private JScrollBar popupScrollBar;
@@ -238,5 +244,37 @@ public class JScrollPopupMenu extends JPopupMenu
                 }
             }
         }
+    }
+
+    @Override
+    public void setVisible(boolean visible)
+    {
+        if (isVisible() && !visible) {
+            fadeOut();
+        } else {
+            super.setVisible(visible);
+        }
+    }
+
+    public void fadeOut()
+    {
+        final Window w = SwingUtilities.getWindowAncestor(this);
+        final ScheduledExecutorService s = Executors.newScheduledThreadPool(1);
+        s.scheduleAtFixedRate(new Runnable()
+        {
+            private float opacity = 1.0f;
+
+            @Override
+            public void run()
+            {
+                w.setOpacity(opacity);
+                opacity -= 0.01f;
+
+                if (opacity <= 0.0f) {
+                    JScrollPopupMenu.super.setVisible(false);
+                    s.shutdown();
+                }
+            }
+        }, 0, 5, TimeUnit.MILLISECONDS);
     }
 }

@@ -13,10 +13,10 @@ public class JInteractiveIcon extends JLabel
 
     public JInteractiveIcon(final URL normalResource, final URL focusedResource, final Callback callback)
     {
-        super(new ImageIcon(normalResource));
-
         normal = new ImageIcon(normalResource);
         focused = new ImageIcon(focusedResource);
+
+        setIcon(normal);
 
         addMouseListener(new MouseListener() {
             @Override

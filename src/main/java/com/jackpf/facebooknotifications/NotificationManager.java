@@ -57,7 +57,7 @@ public class NotificationManager implements Observer
             trayIcon.addMouseListener(new MouseAdapter()
             {
                 @Override
-                public void mouseReleased(MouseEvent e)
+                public void mousePressed(MouseEvent e)
                 {
                     if (!menu.isShowing()) {
                         menu.show(null, e.getX() - 150, e.getY());
@@ -155,10 +155,41 @@ public class NotificationManager implements Observer
      * Add footer to the menu
      * Ideally this wouldn't be in the scrollview, and we wouldn't have to keep adding it again
      */
-    private void addFooter(JPopupMenu menu)
+    private void addFooter(final JPopupMenu menu)
     {
         JPanel p = new JPanel();
         p.setPreferredSize(new Dimension(300, 25));
+
+        JInteractiveIcon close = new JInteractiveIcon(
+            getClass().getResource("/close.png"),
+            getClass().getResource("/close_focus.png"),
+            new JInteractiveIcon.Callback() {
+                @Override
+                public void action(MouseEvent e) {
+                    menu.setVisible(false);
+                }
+            }
+        );
+
+        p.add(close);
+
+        JInteractiveIcon facebook = new JInteractiveIcon(
+            getClass().getResource("/facebook.png"),
+            getClass().getResource("/facebook_focus.png"),
+            new JInteractiveIcon.Callback() {
+                @Override
+                public void action(MouseEvent e) {
+                    try {
+                        Desktop.getDesktop().browse(new URI("https://www.facebook.com"));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    menu.setVisible(false);
+                }
+            }
+        );
+
+        p.add(facebook);
 
         JInteractiveIcon exit = new JInteractiveIcon(
             getClass().getResource("/exit.png"),
@@ -172,6 +203,7 @@ public class NotificationManager implements Observer
         );
 
         p.add(exit);
+
         menu.add(p);
     }
 }
