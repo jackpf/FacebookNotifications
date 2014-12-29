@@ -2,9 +2,12 @@ package com.jackpf.facebooknotifications;
 
 import com.jackpf.facebooknotifications.Facebook.Notification;
 import com.jackpf.facebooknotifications.Facebook.Notifications;
+import com.jackpf.facebooknotifications.Helpers.JInteractiveIcon;
+import com.jackpf.facebooknotifications.Helpers.JInteractiveMenuItem;
 import com.jackpf.facebooknotifications.Helpers.JScrollPopupMenu;
 
 import java.awt.AWTException;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
@@ -23,12 +26,15 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class NotificationManager implements Observer
 {
     private TrayIcon trayIcon;
-    private JScrollPopupMenu menu = new JScrollPopupMenu();
+    private JPopupMenu menu = new JScrollPopupMenu();
     private Notifications notifications;
 
     public NotificationManager(Notifications notifications)
@@ -49,13 +55,17 @@ public class NotificationManager implements Observer
             trayIcon.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    if (!menu.isShowing() && notifications.size() > 0) {
+                    if (!menu.isShowing()) {
                         menu.show(null, e.getX() - 150, e.getY());
                     } else {
                         menu.setVisible(false);
                     }
                 }
             });
+
+            menu.setBorder(new EmptyBorder(0, 0, 0, 0));
+
+            addFooter(menu);
 
             try {
                 SystemTray.getSystemTray().add(trayIcon);
@@ -70,12 +80,14 @@ public class NotificationManager implements Observer
 
     private void addNotification(final Notification notification)
     {
-        final JMenuItem item = new JMenuItem("<html><font size=-1><b>" + notification.getTitle(25) + "</b><br>" + notification.getPrettyDate() + "</font></html>", new ImageIcon(notification.image));
+        final JMenuItem item = new JInteractiveMenuItem("<html><font size=-1><b>" + notification.getTitle(25) + "</b><br>" + notification.getPrettyDate() + "</font></html>", new ImageIcon(notification.image), new Color(0.93f, 0.96f, 0.98f));
         item.setVerticalTextPosition(SwingConstants.TOP);
 
-        item.addActionListener(new ActionListener() {
+        item.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent event) {
+            public void actionPerformed(ActionEvent event)
+            {
                 try {
                     Desktop.getDesktop().browse(new URI(notification.link));
                 } catch (Exception e) {
@@ -125,5 +137,30 @@ public class NotificationManager implements Observer
                 e.printStackTrace();
             }
         }
+
+        addFooter(menu);
+    }
+
+    /**
+     * Add footer to the menu
+     * Ideally this wouldn't be in the scrollview, and we wouldn't have to keep adding it again
+     */
+    private void addFooter(JPopupMenu menu)
+    {
+        JPanel p = new JPanel();
+
+        JInteractiveIcon exit = new JInteractiveIcon(
+            getClass().getResource("/exit.png"),
+            getClass().getResource("/exit_focus.png"),
+            new JInteractiveIcon.Callback() {
+                @Override
+                public void action(MouseEvent e) {
+                    System.exit(0);
+                }
+            }
+        );
+
+        p.add(exit);
+        menu.add(p);
     }
 }

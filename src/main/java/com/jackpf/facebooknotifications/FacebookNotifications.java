@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class Main
+public class FacebookNotifications
 {
     public static void main(String[] args)
     {
