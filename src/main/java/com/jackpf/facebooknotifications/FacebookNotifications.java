@@ -30,7 +30,7 @@ public class FacebookNotifications
                 public void run() {
                     notificationClient.getNotifications();
                 }
-            }, 0, 5);
+            }, 0, 60);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);

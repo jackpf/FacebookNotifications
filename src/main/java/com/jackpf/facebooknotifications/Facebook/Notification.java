@@ -63,8 +63,6 @@ public class Notification
 
     public Image image;
 
-    public int position;
-
     // Object?
 
     public String getTitle(int len)

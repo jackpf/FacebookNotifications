@@ -45,7 +45,7 @@ public class JScrollPopupMenu extends JPopupMenu
             }
         });
 
-        setBorder(new EmptyBorder(0, 0, 0, 0));
+        setBorder(new EmptyBorder(5, 0, 0, 0));
     }
 
     private JScrollBar popupScrollBar;

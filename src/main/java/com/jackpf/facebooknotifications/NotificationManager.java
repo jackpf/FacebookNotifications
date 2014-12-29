@@ -26,10 +26,12 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class NotificationManager implements Observer
 {
@@ -65,6 +67,7 @@ public class NotificationManager implements Observer
                 }
             });
 
+            addNoNotifications();
             addFooter(menu);
 
             try {
@@ -80,7 +83,7 @@ public class NotificationManager implements Observer
 
     private void addNotification(final Notification notification)
     {
-        final JMenuItem item = new JInteractiveMenuItem("<html><font size=-1><b>" + notification.getTitle(25) + "</b><br>" + notification.getPrettyDate() + "</font></html>", new ImageIcon(notification.image), new Color(0.93f, 0.96f, 0.98f));
+        final JMenuItem item = new JInteractiveMenuItem("<html><font size=-1><b>" + notification.getTitle(35) + "</b><br><font color=gray>" + notification.getPrettyDate() + "</font></font></html>", new ImageIcon(notification.image), new Color(0.93f, 0.96f, 0.98f));
         item.setVerticalTextPosition(SwingConstants.TOP);
 
         item.addActionListener(new ActionListener()
@@ -100,10 +103,15 @@ public class NotificationManager implements Observer
         });
 
         menu.add(item);
+        menu.addSeparator();
+    }
 
-        if (notification.position > 1) {
-            menu.addSeparator();
-        }
+    private void addNoNotifications()
+    {
+        JLabel label = new JLabel("NO NOTIFICATIONS", SwingConstants.CENTER);
+        label.setForeground(Color.gray);
+        label.setBorder(new EmptyBorder(5, 5, 5, 5));
+        menu.add(label);
     }
 
     @Override
@@ -132,6 +140,8 @@ public class NotificationManager implements Observer
             }
         } else {
             try {
+                addNoNotifications();
+
                 trayIcon.setImage(ImageIO.read(getClass().getResource("/notification_light.png")));
             } catch (IOException e) {
                 e.printStackTrace();

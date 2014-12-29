@@ -36,12 +36,9 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
         try {
             Connection<Notification> notifications = fetchConnection("me/notifications", Notification.class);
 
-            int i = 0;
             for (Notification notification : notifications.getData()) {
                 // Extras
                 addIcon(notification);
-                notification.position = notifications.getData().size() - i;
-                i++;
 
                 if (!this.notifications.contains(notification)) {
                     this.notifications.add(notification);
@@ -72,24 +69,30 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
     @Override
     public void update(Observable observable, Object data)
     {
-        Notification notification = (Notification) data;
+        final Notifications notifications = (Notifications) observable;
+        final Notification notification = (Notification) data;
 
-        if (!((Notifications) observable).contains(notification)) {
-            HttpClient client = HttpClientBuilder.create().build();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!notifications.contains(notification)) {
+                    HttpClient client = HttpClientBuilder.create().build();
 
-            HttpPost request = new HttpPost(
-                String.format(
-                    "https://graph.facebook.com/%s?access_token=%s&unread=false",
-                    notification.id,
-                    authenticator.getAccessToken()
-                )
-            );
+                    HttpPost request = new HttpPost(
+                        String.format(
+                            "https://graph.facebook.com/%s?access_token=%s&unread=false",
+                            notification.id,
+                            authenticator.getAccessToken()
+                        )
+                    );
 
-            try {
-                client.execute(request);
-            } catch (IOException e) {
-                e.printStackTrace();
+                    try {
+                        client.execute(request);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        }
+        }).start();
     }
 }

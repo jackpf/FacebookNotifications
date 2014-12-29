@@ -39,6 +39,6 @@ public class JInteractiveMenuItem extends JMenuItem
             }
         });
 
-        setBorder(new EmptyBorder(5, 0, 5, 0));
+        setBorder(new EmptyBorder(0, 0, 5, 0));
     }
 }
