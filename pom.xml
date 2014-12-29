@@ -16,7 +16,7 @@
                 <version>1.0-SNAPSHOT</version>
                 <configuration>
                     <mainClass>com.jackpf.facebooknotifications.FacebookNotifications</mainClass>
-                    <iconFile>${basedir}/src/main/resources/icon.icns</iconFile>
+                    <iconFile>icon.icns</iconFile>
                     <dictionaryFile>Info.plist</dictionaryFile>
                 </configuration>
                 <executions>
