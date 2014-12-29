@@ -17,7 +17,7 @@
                 <configuration>
                     <mainClass>com.jackpf.facebooknotifications.FacebookNotifications</mainClass>
                     <iconFile>${basedir}/src/main/resources/icon.icns</iconFile>
-                    <!--<dictionaryFile>${basedir}/src/main/resources/Info.plist</dictionaryFile>-->
+                    <dictionaryFile>Info.plist</dictionaryFile>
                 </configuration>
                 <executions>
                     <execution>
