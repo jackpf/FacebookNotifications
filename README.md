@@ -1,7 +1,8 @@
 FacebookNotifications
 =====================
 
-Periodically checks for new Facebook notifications via an OS X system notification tray.
+Periodically checks for new Facebook notifications via a system notification tray.
+Working on OS X and Linux (albeit buggy), untested on Windows.
 
 Build instructions:
 * Requires Maven:
