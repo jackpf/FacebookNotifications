@@ -101,7 +101,7 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
             }
 
             //stop();
-            this.accessToken = authenticator.getAccessToken();
+            this.accessToken = authenticator.getAccessToken(true);
             run();
         }
     }

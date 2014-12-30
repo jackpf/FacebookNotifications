@@ -4,6 +4,8 @@ import com.jackpf.facebooknotifications.Facebook.Authenticator;
 import com.jackpf.facebooknotifications.Facebook.NotificationClient;
 import com.jackpf.facebooknotifications.Facebook.Notifications;
 
+import javax.swing.JOptionPane;
+
 public class FacebookNotifications
 {
     public static void main(String[] args)
@@ -41,6 +43,14 @@ public class FacebookNotifications
             });
         } catch (Exception e) {
             e.printStackTrace();
+
+            JOptionPane.showMessageDialog(
+                null,
+                e.getClass().getName() + ": " + e.getMessage(),
+                "An error has occurred",
+                JOptionPane.ERROR_MESSAGE
+            );
+
             System.exit(-1);
         }
     }
