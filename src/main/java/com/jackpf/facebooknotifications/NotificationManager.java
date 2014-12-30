@@ -53,6 +53,9 @@ public class NotificationManager implements Observer
                 null
             );
 
+            // Fixes linux tray icon
+            trayIcon.setImageAutoSize(true);
+
             trayIcon.addMouseListener(new MouseAdapter()
             {
                 @Override
