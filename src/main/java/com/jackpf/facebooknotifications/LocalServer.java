@@ -33,7 +33,7 @@ public class LocalServer
             String code = parseQueryString(exchange).get("code");
 
             if (code != null) {
-                response = response.replace("{%code%}", code);
+                response = String.format(response, code);
             } else {
                 response = "Error!";
             }

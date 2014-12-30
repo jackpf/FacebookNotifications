@@ -1,27 +1,6 @@
-<!DOCTYPE html>
 <html>
-    <head>
-        <title>Facebook Notifications</title>
-        <style type="text/css">
-            body{background-color:#fff;color:#333;font-family:Arial,Verdana,sans-serif;font-size:62.5%;margin:10% 5% 0 5%;text-align:center;}
-            form{margin-bottom:1em;}
-            a,a:visited,a:active{color:#0080ff;text-decoration:underline;}
-            a:hover{text-decoration:none;}
-            input[type=text]{border:1px solid #ccc;color:#000;font-size:1em;padding:4px 6px 4px 6px;}
-            #container{clear:both;font-size:3em;margin:auto;}
-        </style>
-    </head>
     <body>
-        <div id="container">
-            Please paste this authorisation code into the app (<small>as pictured below</small>):<br>
-            <input onclick="this.select();" type="text" value="{%code%}">
-            <br /><br />
-
-            <small>
-                <b>Why do I need to do this?</b><br>
-                This app needs an authorisation code to be able to see your notifications. You can read more about how this works <a href="https://developers.facebook.com/docs/facebook-login/access-tokens?locale=en_GB">here</a>.
-            </small>
-        </div>
-  </body>
+        Please copy and paste this code into the Facebook Notification settings:<br>
+        <input onclick="this.select();" type="text" value="%s">
+    </body>
 </html>
-
