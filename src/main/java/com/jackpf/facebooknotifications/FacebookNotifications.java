@@ -44,9 +44,12 @@ public class FacebookNotifications
         } catch (Exception e) {
             e.printStackTrace();
 
+            String parts[] = e.getClass().getCanonicalName().split("\\.");
+            String exception = parts[parts.length - 1];
+
             JOptionPane.showMessageDialog(
                 null,
-                e.getClass().getName() + ": " + e.getMessage(),
+                 exception + ": " + e.getMessage(),
                 "An error has occurred",
                 JOptionPane.ERROR_MESSAGE
             );
