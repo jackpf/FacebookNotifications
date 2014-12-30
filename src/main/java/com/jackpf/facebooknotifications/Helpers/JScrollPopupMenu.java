@@ -246,9 +246,15 @@ public class JScrollPopupMenu extends JPopupMenu
         }
     }
 
+    private boolean fading = false;
+
     @Override
     public void setVisible(boolean visible)
     {
+        if (fading) {
+            return;
+        }
+
         if (isVisible() && !visible) {
             fadeOut();
         } else {
@@ -267,12 +273,14 @@ public class JScrollPopupMenu extends JPopupMenu
             @Override
             public void run()
             {
+                fading = true;
                 w.setOpacity(opacity);
                 opacity -= 0.01f;
 
                 if (opacity <= 0.0f) {
                     JScrollPopupMenu.super.setVisible(false);
                     s.shutdown();
+                    fading = false;
                 }
             }
         }, 0, 5, TimeUnit.MILLISECONDS);

@@ -4,11 +4,15 @@ import com.jackpf.facebooknotifications.Facebook.Authenticator;
 import com.jackpf.facebooknotifications.Facebook.NotificationClient;
 import com.jackpf.facebooknotifications.Facebook.Notifications;
 
+import javax.swing.UIManager;
+
 public class FacebookNotifications
 {
     public static void main(String[] args)
     {
         try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
             // Listen locally for incoming OAuth callbacks
             new LocalServer().listen();
 

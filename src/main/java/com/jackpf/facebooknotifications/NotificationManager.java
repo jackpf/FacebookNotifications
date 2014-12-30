@@ -67,7 +67,7 @@ public class NotificationManager implements Observer
                 }
             });
 
-            addNoNotifications();
+            setMessage("NO NOTIFICATIONS");
             addFooter(menu);
 
             try {
@@ -106,9 +106,9 @@ public class NotificationManager implements Observer
         menu.addSeparator();
     }
 
-    private void addNoNotifications()
+    public void setMessage(String message)
     {
-        JLabel label = new JLabel("NO NOTIFICATIONS", SwingConstants.CENTER);
+        JLabel label = new JLabel(message, SwingConstants.CENTER);
         label.setForeground(Color.gray);
         label.setBorder(new EmptyBorder(5, 5, 5, 5));
         menu.add(label);
@@ -140,7 +140,7 @@ public class NotificationManager implements Observer
             }
         } else {
             try {
-                addNoNotifications();
+                setMessage("NO NOTIFICATIONS");
 
                 trayIcon.setImage(ImageIO.read(getClass().getResource("/notification_light.png")));
             } catch (IOException e) {

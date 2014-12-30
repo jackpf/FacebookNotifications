@@ -35,6 +35,16 @@ public class Authenticator
         reloadAccessToken();
     }
 
+    public String getApiKey()
+    {
+        return apiKey;
+    }
+
+    public String getApiSecret()
+    {
+        return apiSecret;
+    }
+
     private void reloadAccessToken()
     {
         File file = new File(ACCESS_TOKEN_FILE);
