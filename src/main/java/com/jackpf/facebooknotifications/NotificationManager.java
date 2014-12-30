@@ -25,7 +25,6 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -82,7 +81,7 @@ public class NotificationManager implements Observer
 
     private void addNotification(final Notification notification)
     {
-        final JMenuItem item = new JInteractiveMenuItem("<html><font size=-1><b>" + notification.getTitle(35) + "</b><br><font color=gray>" + notification.getPrettyDate() + "</font></font></html>", new ImageIcon(notification.image), new Color(0.93f, 0.96f, 0.98f));
+        final JMenuItem item = new JInteractiveMenuItem("<html><font size=-1><b>" + notification.getTitle(35) + "</b><br><font color=gray>" + notification.getPrettyDate() + "</font></font></html>", notification.image, new Color(0.93f, 0.96f, 0.98f));
         item.setVerticalTextPosition(SwingConstants.TOP);
 
         item.addActionListener(new ActionListener()

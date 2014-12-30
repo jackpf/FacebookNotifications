@@ -4,12 +4,13 @@ import com.restfb.Facebook;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
-import java.awt.Image;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import javax.swing.ImageIcon;
 
 public class Notification
 {
@@ -61,7 +62,7 @@ public class Notification
     @Facebook
     public int unread;
 
-    public Image image;
+    public ImageIcon image;
 
     // Object?
 

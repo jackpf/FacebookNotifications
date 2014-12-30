@@ -2,16 +2,13 @@ package com.jackpf.facebooknotifications.Facebook;
 
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
-import com.restfb.Parameter;
 import com.restfb.exception.FacebookOAuthException;
-import com.restfb.types.User;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutorService;
@@ -20,12 +17,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
-
 public class NotificationClient extends DefaultFacebookClient implements Observer, Runnable
 {
     private Notifications notifications;
     private Authenticator authenticator;
+    private ImageCache imageCache;
     private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
     private Callback callback;
 
@@ -34,6 +30,7 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
         super(authenticator.getAccessToken());
         this.notifications = notifications;
         this.authenticator = authenticator;
+        this.imageCache = new ImageCache(authenticator);
 
         notifications.addObserver(this);
     }
@@ -108,10 +105,11 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
 
     private void addIcon(Notification notification)
     {
-        User user = fetchObject(notification.from.id, User.class, Parameter.with("fields", "picture"), Parameter.with("type", "large"));
+        /* Apparently User.getPicture() is no longer the correct way to get get user's picture
+        User user = fetchObject(notification.from.id, User.class, Parameter.with("fields", "picture")); */
 
         try {
-            notification.image = ImageIO.read(new URL(user.getPicture().getUrl()));
+            notification.image = imageCache.getImage(notification.from.id);
         } catch (Exception e) {
             e.printStackTrace();
         }
