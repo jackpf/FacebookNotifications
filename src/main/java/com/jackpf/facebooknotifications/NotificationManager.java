@@ -60,7 +60,7 @@ public class NotificationManager implements Observer
                 public void mousePressed(MouseEvent e)
                 {
                     if (!menu.isShowing()) {
-                        menu.show(null, e.getX() - 150, e.getY());
+                        menu.show(null, e.getX() - (int) Math.round(menu.getPreferredSize().getWidth() / 2), e.getY());
                     } else {
                         menu.setVisible(false);
                     }
