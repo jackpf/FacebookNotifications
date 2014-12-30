@@ -1,6 +1,46 @@
+<!DOCTYPE html>
 <html>
-    <body>
-        Please copy and paste this code into the Facebook Notification settings:<br>
-        <input onclick="this.select();" type="text" value="%s">
-    </body>
+<head>
+    <title>Facebook Notifications</title>
+    <style type="text/css">
+        body{background-color:#fff;color:#333;font-family:Arial,Verdana,sans-serif;font-size:0.5em;margin:10% 5% 0 5%;}
+        form{margin-bottom:1em;}
+        a,a:visited,a:active{color:#0080ff;text-decoration:underline;}
+        a:hover{text-decoration:none;}
+        input[type=text]{border:1px solid #ccc;color:#000;font-size:1em;padding:4px 6px 4px 6px;}
+        #container{clear:both;font-size:3em;margin:auto;}
+    </style>
+</head>
+<body>
+<div id="container">
+    <img style="float: left;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAADQ0lEQVR42u3dvUvUcRwH8BPMraCpSSiDaIigJYJoa6ipsuwJM4yKHgRpk1qaoq0lVLIwh5boAfoDQqn9PIi2INOGloaiJejhc/AbRaXf987ft3u94U3jwfvzIq7zd1mriYiIiIiIiIisnJ5of3QiOhdtRN9pW9soth8vbtHTruOfj37u6ur6o9Vp8ybRoVYevjs6bezKQ5gubpU8MwbOBsHj1McfMmx2CM6lfMO3ZNTsACymemPYb9BsERxLAWDSmNkCmEwBYM6Y2QKYTQGgbsxsAdRTAGgYM1sADQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/nXYX9GF6Ovi6Zs70RvR4ehA9HD0QHRvdE90V3RndHu0L7ot2lv0NgB5HPxtdCy6P7ox4dNWowBU9/A/o/ejW1v4sC0AFT3+++juNjxmD0BFf46+uU3fswCgYsf/1uK/8gGoOICxNn/NDoAKHf97dBMAnQvgyTp80RaACgEYBKCzAfQB0KEAinf/XQB0LoD5dfrPNgCoCIBXAHQ2gKmER21+kHQpei/6PPqmOMaHeK2l+PNL9GvRHwBUA8DdBFs1P0N4Gv3teYD8ANxMsNUzD4TkC2C05E5bms8NAJAvgCsldzrkkbC8AVwoudMwAJ39MfA1APIGcKrkTiMA5A3gZMmdrgOQN4CBkjtdBSBvACdK7nQZgOoe92X0xSrdV3Kng2t4jeXaAKD1ADbUqhs/DAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEjwuNeZVdpbcqe+NbzGcp0BoBpIjpfc6aLnAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAlY41Ed5ToLQAUAAVAAdD/CUDdmNkCqKcAMGfMbAHMpgAwYcxsAYynAHDUmNkCOJICQE900aDZHf9TcbskGTRqdgDO1hLnkWGzOf7DWgvSHZ0ycOWP/6C4VcvS/C0XC8au3OE/Rk/X2pTmm4v+5j8Rm58TFB84zGtbWy+2Hy9u0VMTEREREREREVkhfwEsIveJwWn2ngAAAABJRU5ErkJggg==">
+    <h1 style="padding-top: 25px;">
+        Facebook Notifications for OS X
+    </h1>
+
+    <br clear=both><br clear=both>
+
+    <span style="font-size:1em;">Please follow these instructions to allow Facebook Notifications to receive updates:</span><br>
+    <ol>
+        <li>
+            Copy this code:<br>
+            <input onclick="this.select();" type="text" value="{%code%}">
+        </li>
+        <li>
+            Minimise this browser window
+        </li>
+        <li>
+            Paste the code into the text box and click OK<br>
+            <small>(If you can't see the input box, try minimising all your windows)</small>
+        </li>
+    </ol>
+
+    <br /><br />
+
+    <small style="text-align: center;">
+        <b>Why do I need to do this?</b><br>
+        This app needs an authorisation code to be able to see your notifications. You can read more about how this works <a href="https://developers.facebook.com/docs/facebook-login/access-tokens?locale=en_GB">here</a>.
+    </small>
+</div>
+</body>
 </html>

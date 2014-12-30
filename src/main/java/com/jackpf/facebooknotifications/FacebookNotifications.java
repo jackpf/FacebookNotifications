@@ -25,12 +25,7 @@ public class FacebookNotifications
             );
 
             // Periodically check for notifications!
-            ThreadScheduler.run(new Runnable() {
-                @Override
-                public void run() {
-                    notificationClient.getNotifications();
-                }
-            }, 0, 60);
+            notificationClient.start(0, 60);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);

@@ -14,13 +14,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
-public class NotificationClient extends DefaultFacebookClient implements Observer
+public class NotificationClient extends DefaultFacebookClient implements Observer, Runnable
 {
     private Notifications notifications;
     private Authenticator authenticator;
+    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 
     public NotificationClient(Notifications notifications, Authenticator authenticator)
     {
@@ -31,7 +37,34 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
         notifications.addObserver(this);
     }
 
-    public void getNotifications()
+    public void start(int initialDelay, int delay)
+    {
+        final NotificationClient self = this;
+
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable()
+        {
+            private final ExecutorService executor = Executors.newSingleThreadExecutor();
+            private Future<?> lastExecution;
+
+            @Override
+            public void run()
+            {
+                if (lastExecution != null && !lastExecution.isDone()) {
+                    return;
+                }
+
+                lastExecution = executor.submit(self);
+            }
+        }, initialDelay, delay, TimeUnit.SECONDS);
+    }
+
+    public void stop()
+    {
+        scheduledExecutorService.shutdown();
+    }
+
+    @Override
+    public void run()
     {
         try {
             Connection<Notification> notifications = fetchConnection("me/notifications", Notification.class);
@@ -47,7 +80,8 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
         } catch (FacebookOAuthException e) {
             e.printStackTrace();
 
-            this.accessToken = authenticator.getAccessToken(true);
+            //stop();
+            authenticator.getAccessToken();
         }
     }
 
