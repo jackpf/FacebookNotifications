@@ -18,6 +18,7 @@
                     <mainClass>com.jackpf.facebooknotifications.FacebookNotifications</mainClass>
                     <iconFile>src/main/resources/icon.icns</iconFile>
                     <dictionaryFile>Info.plist</dictionaryFile>
+                    <jvmVersion>1.8</jvmVersion>
                 </configuration>
                 <executions>
                     <execution>

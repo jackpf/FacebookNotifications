@@ -79,7 +79,12 @@ public class NotificationManager implements Observer
         }
     }
 
-    private void addNotification(final Notification notification)
+    private void addNotification(Notification notification)
+    {
+        addNotification(notification, false);
+    }
+
+    private void addNotification(final Notification notification, boolean last)
     {
         final JMenuItem item = new JInteractiveMenuItem("<html><font size=-1><b>" + notification.getTitle(35) + "</b><br><font color=gray>" + notification.getPrettyDate() + "</font></font></html>", notification.image, new Color(0.93f, 0.96f, 0.98f));
         item.setVerticalTextPosition(SwingConstants.TOP);
@@ -101,7 +106,12 @@ public class NotificationManager implements Observer
         });
 
         menu.add(item);
-        menu.addSeparator();
+
+        JPopupMenu.Separator separator = new JPopupMenu.Separator();
+        if (last) { // If last item, don't add padding to the bottom of the separator
+            separator.setPreferredSize(new Dimension(menu.getWidth(), (int) separator.getPreferredSize().getHeight() / 2));
+        }
+        menu.add(separator);
     }
 
     public void setMessage(String message)
@@ -122,8 +132,8 @@ public class NotificationManager implements Observer
         menu.removeAll();
 
         if (notifications.size() > 0) {
-            for (Object o : notifications) {
-                addNotification((Notification) o);
+            for (int i = 0; i < notifications.size(); i++) {
+                addNotification(notifications.get(i), notifications.get(i) == notifications.get(notifications.size() - 1));
             }
 
             try {
@@ -147,6 +157,7 @@ public class NotificationManager implements Observer
         } else {
             try {
                 trayIcon.setImage(ImageIO.read(getClass().getResource("/notification_light.png")));
+                setMessage("NO NOTIFICATIONS");
             } catch (IOException e) {
                 e.printStackTrace();
             }

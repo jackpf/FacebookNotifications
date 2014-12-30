@@ -53,6 +53,11 @@ public class Notifications extends Observable implements Iterable
         notifyObservers(new Event(notification, Event.REMOVE));
     }
 
+    public Notification get(int index)
+    {
+        return notifications.get(index);
+    }
+
     public Iterator<Notification> iterator()
     {
         return notifications.iterator();
