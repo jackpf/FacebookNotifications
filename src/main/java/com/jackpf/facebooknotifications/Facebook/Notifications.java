@@ -12,6 +12,19 @@ public class Notifications extends Observable implements Iterable
 {
     private List<Notification> notifications = new ArrayList<Notification>();
 
+    public class Event
+    {
+        public final Notification notification;
+        public final int operation;
+        public static final int ADD = 1, REMOVE = 2;
+
+        public Event(Notification notification, int operation)
+        {
+            this.notification = notification;
+            this.operation = operation;
+        }
+    }
+
     public void add(Notification notification)
     {
         notifications.add(notification);
@@ -29,7 +42,7 @@ public class Notifications extends Observable implements Iterable
         });
 
         setChanged();
-        notifyObservers(notification);
+        notifyObservers(new Event(notification, Event.ADD));
     }
 
     public void remove(Notification notification)
@@ -37,7 +50,7 @@ public class Notifications extends Observable implements Iterable
         notifications.remove(notification);
 
         setChanged();
-        notifyObservers(notification);
+        notifyObservers(new Event(notification, Event.REMOVE));
     }
 
     public Iterator<Notification> iterator()

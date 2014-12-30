@@ -26,7 +26,7 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
 {
     private Notifications notifications;
     private Authenticator authenticator;
-    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
     private Callback callback;
 
     public NotificationClient(Notifications notifications, Authenticator authenticator)
@@ -124,19 +124,18 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
     @Override
     public void update(Observable observable, Object data)
     {
-        final Notifications notifications = (Notifications) observable;
-        final Notification notification = (Notification) data;
+        final Notifications.Event event = (Notifications.Event) data;
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (!notifications.contains(notification)) {
+                if (event.operation == Notifications.Event.REMOVE) {
                     HttpClient client = HttpClientBuilder.create().build();
 
                     HttpPost request = new HttpPost(
                         String.format(
                             "https://graph.facebook.com/%s?access_token=%s&unread=false",
-                            notification.id,
+                            event.notification.id,
                             authenticator.getAccessToken()
                         )
                     );

@@ -134,10 +134,12 @@ public class NotificationManager implements Observer
             }
 
             try {
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("/notification.wav"));
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioInputStream);
-                clip.start();
+                if (((Notifications.Event) data).operation == Notifications.Event.ADD) {
+                    AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("/notification.wav"));
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audioInputStream);
+                    clip.start();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
