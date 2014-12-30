@@ -10,12 +10,18 @@ public class KeyManager
 {
     private Map<String, String> keys = new HashMap<String, String>();
 
-    public void loadKeys() throws IOException
+    public void loadKeys() throws KeyManagerException
     {
-        String text = IOUtils.toString(
-            this.getClass().getResourceAsStream("/api_keys"),
-            "UTF-8"
-        );
+        String text;
+
+        try {
+            text = IOUtils.toString(
+                this.getClass().getResourceAsStream("/api_keys"),
+                "UTF-8"
+            );
+        } catch (IOException e) {
+            throw new KeyManagerException("Unable to read API keys", e);
+        }
 
         for (String line : text.split("\n")) {
             String[] parts = line.split(":");
@@ -27,5 +33,18 @@ public class KeyManager
     public String getKey(String type)
     {
         return keys.get(type);
+    }
+
+    public class KeyManagerException extends Exception
+    {
+        public KeyManagerException(String message)
+        {
+            super(message);
+        }
+
+        public KeyManagerException(String message, Exception previous)
+        {
+            super(message, previous);
+        }
     }
 }
