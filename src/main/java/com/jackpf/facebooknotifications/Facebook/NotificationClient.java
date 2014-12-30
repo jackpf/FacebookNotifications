@@ -27,6 +27,7 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
     private Notifications notifications;
     private Authenticator authenticator;
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+    private Callback callback;
 
     public NotificationClient(Notifications notifications, Authenticator authenticator)
     {
@@ -37,8 +38,19 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
         notifications.addObserver(this);
     }
 
+    public interface Callback
+    {
+        public void update(Notifications notifications, Exception e);
+    }
+
     public void start(int initialDelay, int delay)
     {
+        start(initialDelay, delay, null);
+    }
+
+    public void start(int initialDelay, int delay, Callback callback)
+    {
+        this.callback = callback;
         final NotificationClient self = this;
 
         scheduledExecutorService.scheduleAtFixedRate(new Runnable()
@@ -77,11 +89,20 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
                     this.notifications.add(notification);
                 }
             }
+
+            if (callback != null) {
+                callback.update(this.notifications, null);
+            }
         } catch (FacebookOAuthException e) {
             e.printStackTrace();
 
+            if (callback != null) {
+                callback.update(this.notifications, e);
+            }
+
             //stop();
-            authenticator.getAccessToken();
+            this.accessToken = authenticator.getAccessToken();
+            run();
         }
     }
 

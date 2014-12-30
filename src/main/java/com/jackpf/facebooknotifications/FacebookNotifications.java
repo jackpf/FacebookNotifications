@@ -15,17 +15,30 @@ public class FacebookNotifications
             Notifications notifications = new Notifications();
 
             // Initialise system tray icon
-            NotificationManager notificationManager = new NotificationManager(notifications);
+            final NotificationManager notificationManager = new NotificationManager(notifications);
             notificationManager.createSystemTrayIcon();
 
             // Initialise Facebook client
+            KeyManager keyManager = new KeyManager();
+            keyManager.loadKeys();
+
             final NotificationClient notificationClient = new NotificationClient(
                 notifications,
-                new Authenticator("630238967098572", "436975f7333c19b5ef2d4e589c470a81")
+                new Authenticator(keyManager.getKey("api_key"), keyManager.getKey("api_secret"))
             );
 
             // Periodically check for notifications!
-            notificationClient.start(0, 60);
+            notificationClient.start(0, 60, new NotificationClient.Callback()
+            {
+                @Override
+                public void update(Notifications notifications, Exception e)
+                {
+                    // Need a better way of letting the notification know we've authenticated...
+                    if (e == null && notifications.size() == 0) {
+                        notificationManager.setMessage("NO UPDATES");
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);

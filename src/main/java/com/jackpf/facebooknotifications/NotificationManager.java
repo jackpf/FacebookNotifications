@@ -67,8 +67,7 @@ public class NotificationManager implements Observer
                 }
             });
 
-            addNoNotifications();
-            addFooter(menu);
+            setMessage("NOT LOGGED IN");
 
             try {
                 SystemTray.getSystemTray().add(trayIcon);
@@ -106,12 +105,16 @@ public class NotificationManager implements Observer
         menu.addSeparator();
     }
 
-    private void addNoNotifications()
+    public void setMessage(String message)
     {
-        JLabel label = new JLabel("NO NOTIFICATIONS", SwingConstants.CENTER);
+        menu.removeAll();
+
+        JLabel label = new JLabel(message, SwingConstants.CENTER);
         label.setForeground(Color.gray);
         label.setBorder(new EmptyBorder(5, 5, 5, 5));
         menu.add(label);
+
+        addFooter(menu);
     }
 
     @Override
@@ -138,17 +141,15 @@ public class NotificationManager implements Observer
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            addFooter(menu);
         } else {
             try {
-                addNoNotifications();
-
                 trayIcon.setImage(ImageIO.read(getClass().getResource("/notification_light.png")));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        addFooter(menu);
     }
 
     /**
