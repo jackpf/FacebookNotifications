@@ -24,4 +24,7 @@ cd FacebookNotifications
 mvn package appbundle:bundle
 ```
 
+You'll need to set up your own Facebook app to obtain an API key and secret.
+Then navigate to src/main/resources and rename api_keys.dist to api_keys, and replace the values with your own.
+
 * Generated app will be in the target directory, should be good to go.
