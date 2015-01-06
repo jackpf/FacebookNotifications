@@ -1,5 +1,7 @@
 package com.jackpf.facebooknotifications.Facebook;
 
+import com.restfb.Connection;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +18,7 @@ public class Notifications extends Observable implements Iterable
     {
         public final Notification notification;
         public final int operation;
-        public static final int ADD = 1, REMOVE = 2;
+        public static final int ADD = 1, REMOVE = 2, SET = 3;
 
         public Event(Notification notification, int operation)
         {
@@ -25,24 +27,39 @@ public class Notifications extends Observable implements Iterable
         }
     }
 
-    public void add(Notification notification)
+    public void set(Connection<Notification> notifications)
     {
-        notifications.add(notification);
-
-        Collections.sort(notifications, new Comparator<Notification>() {
-            @Override
-            public int compare(Notification o1, Notification o2) {
-                try {
-                    return o1.getParsedDate().before(o2.getParsedDate()) ? 1 : -1;
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    return -1;
-                }
-            }
-        });
-
         setChanged();
-        notifyObservers(new Event(notification, Event.ADD));
+        notifyObservers(new Event(null, Event.SET));
+
+        for (Notification notification : this.notifications) {
+            if (!containsNotification(notification, notifications.getData())) {
+                this.notifications.remove(notification);
+            }
+        }
+
+        for (Notification notification : notifications.getData()) {
+            if (contains(notification)) {
+                return;
+            }
+
+            this.notifications.add(notification);
+
+            Collections.sort(this.notifications, new Comparator<Notification>() {
+                @Override
+                public int compare(Notification o1, Notification o2) {
+                    try {
+                        return o1.getParsedDate().before(o2.getParsedDate()) ? 1 : -1;
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        return -1;
+                    }
+                }
+            });
+
+            setChanged();
+            notifyObservers(new Event(notification, Event.ADD));
+        }
     }
 
     public void remove(Notification notification)
@@ -68,14 +85,21 @@ public class Notifications extends Observable implements Iterable
         return notifications.size();
     }
 
-    public boolean contains(Notification notification)
+    private boolean containsNotification(Notification notification, Iterable notifications)
     {
-        for (Notification n : notifications) {
+        for (Object o : notifications) {
+            Notification n = (Notification) o;
+
             if (n.id.equals(notification.id)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public boolean contains(Notification notification)
+    {
+        return containsNotification(notification, this);
     }
 }

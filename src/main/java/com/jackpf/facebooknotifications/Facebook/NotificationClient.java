@@ -81,11 +81,9 @@ public class NotificationClient extends DefaultFacebookClient implements Observe
             for (Notification notification : notifications.getData()) {
                 // Extras
                 addIcon(notification);
-
-                if (!this.notifications.contains(notification)) {
-                    this.notifications.add(notification);
-                }
             }
+
+            this.notifications.set(notifications);
 
             if (callback != null) {
                 callback.update(this.notifications, null);

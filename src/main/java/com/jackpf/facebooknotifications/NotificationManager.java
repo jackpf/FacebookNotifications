@@ -37,6 +37,7 @@ public class NotificationManager implements Observer
     private TrayIcon trayIcon;
     private JPopupMenu menu = new JScrollPopupMenu();
     private Notifications notifications;
+    private long lastNotificationSound = 0;
 
     public NotificationManager(Notifications notifications)
     {
@@ -89,7 +90,7 @@ public class NotificationManager implements Observer
 
     private void addNotification(final Notification notification, boolean last)
     {
-        final JMenuItem item = new JInteractiveMenuItem("<html><font size=-1><b>" + notification.getTitle(35) + "</b><br><font color=gray>" + notification.getPrettyDate() + "</font></font></html>", notification.image, new Color(0.93f, 0.96f, 0.98f));
+        final JMenuItem item = new JInteractiveMenuItem(notification, new Color(0.93f, 0.96f, 0.98f));
         item.setVerticalTextPosition(SwingConstants.TOP);
 
         item.addActionListener(new ActionListener()
@@ -146,11 +147,13 @@ public class NotificationManager implements Observer
             }
 
             try {
-                if (((Notifications.Event) data).operation == Notifications.Event.ADD) {
+                long t = System.currentTimeMillis() / 1000;
+                if (((Notifications.Event) data).operation == Notifications.Event.ADD && t - lastNotificationSound > 10) {
                     AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("/notification.wav"));
                     Clip clip = AudioSystem.getClip();
                     clip.open(audioInputStream);
                     clip.start();
+                    lastNotificationSound = t;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
