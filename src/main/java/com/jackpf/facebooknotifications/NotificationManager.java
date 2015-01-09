@@ -125,6 +125,7 @@ public class NotificationManager implements Observer
         JLabel label = new JLabel(message, SwingConstants.CENTER);
         label.setForeground(Color.gray);
         label.setBorder(new EmptyBorder(5, 5, 5, 5));
+        label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         menu.add(label);
 
         addFooter(menu);
