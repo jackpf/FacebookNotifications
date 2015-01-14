@@ -56,10 +56,10 @@ public class JScrollPopupMenu extends JPopupMenu
 
                 if (opacity <= 0.0f) {
                     JScrollPopupMenu.super.setVisible(false);
-                    s.shutdown();
                     fading = false;
+                    s.shutdown();
                 }
             }
-        }, 0, 3, TimeUnit.MILLISECONDS);
+        }, 0, 1, TimeUnit.MILLISECONDS);
     }
 }

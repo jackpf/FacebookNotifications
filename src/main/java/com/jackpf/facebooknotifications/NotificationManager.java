@@ -204,12 +204,30 @@ public class NotificationManager implements Observer
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
+
                     menu.setVisible(false);
                 }
             }
         );
 
         p.add(facebook);
+
+        JInteractiveIcon readAll = new JInteractiveIcon(
+            getClass().getResource("/read.png"),
+            getClass().getResource("/read_focus.png"),
+            new JInteractiveIcon.Callback() {
+                @Override
+                public void action(MouseEvent e) {
+                    for (Object o : notifications) {
+                        notifications.remove((Notification) o);
+                    }
+
+                    menu.setVisible(false);
+                }
+            }
+        );
+
+        p.add(readAll);
 
         JInteractiveIcon exit = new JInteractiveIcon(
             getClass().getResource("/exit.png"),
